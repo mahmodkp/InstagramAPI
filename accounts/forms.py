@@ -1,6 +1,6 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import User
+from .models import CustomUser
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -8,8 +8,8 @@ class CustomUserCreationForm(UserCreationForm):
     This form is used for creating a new user
     """
     class Meta:
-        model = User
-        fields = ('email', 'mobile',)
+        model = CustomUser
+        fields = ('email', 'mobile', )
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -17,7 +17,7 @@ class CustomUserChangeForm(UserChangeForm):
     This form is used for changing current user
     """
     class Meta:
-        model = User
+        model = CustomUser
         fields = ('email', 'mobile',)
 
 # # accounts/forms.py
