@@ -42,6 +42,7 @@ urlpatterns = [
     path('upload/', include('drf_file_upload.urls')),
     # App Routes
     path("api/v1/contents/", include('content.urls')),
+    path("api/v1/accounts/", include('accounts.urls')),
     # path("api/v1/blog/", include('blog.urls')),
     # path("api/v1/orders/", include('orders.urls')),
     # path("api/v1/payments/", include('payments.urls')),
