@@ -76,6 +76,33 @@ class Post(models.Model):
         post = self.get_object()
         return post.likes()
 
+
+class StoryComment(models.Model):
+    story = models.ForeignKey('content.Story',
+                             related_name='Comment_from_Story',
+                             on_delete=models.CASCADE)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               related_name='Story_Comment_Author',
+                               on_delete=models.CASCADE)
+    content = models.CharField('Content', max_length=2000, blank=False)
+    # usertags = models.ManyToManyField(settings.AUTH_USER_MODEL,
+    #                                   related_name='Comment_Tags',
+    #                                   blank=True,
+    #                                   symmetrical=True)
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                   related_name="Story_Comment_Likes",
+                                   blank=True,
+                                   symmetrical=False)
+    posted_time = models.DateTimeField(
+        'Story_posted_time', auto_now_add=True)
+
+    def __str__(self):
+        return "{}'s comment in {}".format(self.author, self.post)
+
+    def likes_count(self):
+        if self.likes.count():
+            return self.likes.count()
+        return 0
 class Story(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                related_name='Story_Owner',

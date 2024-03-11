@@ -12,18 +12,21 @@ from .serializers import (
     PostSerializer,
     CustomUserSerializer,
     PostWriteSerializer,
+    StorySerializer,
 )
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 
 from rest_framework.decorators import action
 from rest_framework import status
-from .models import Comment, Hashtag, Media, Post
+from .models import Comment, Hashtag, Media, Post, Story
 from rest_framework.generics import (  # CreateAPIView,
     # ListAPIView,
     RetrieveAPIView,
     UpdateAPIView,
     DestroyAPIView)
+
+from userlog.models import PostLog, StoryLog
 
 
 class PostViewset(viewsets.ModelViewSet):
@@ -33,7 +36,33 @@ class PostViewset(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        user = self.request.user
+        if user:
+            followee_list = Post.objects.raw(f'''
+                    select id from content_post  where author_id
+                    IN
+                    (
+                    select to_customuser_id from accounts_customuser_following where from_customuser_id = {user.id}
+                    )
+                ''')
+            followee_list = [post.id for post in followee_list]
+            print(followee_list)
+            queryset = queryset.filter(
+                pk__in=followee_list).order_by('-posted_time')
+            # user.followers.objects.all()
+
+        # queryset.filter()
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs):
         serializer = PostWriteSerializer(data=request.data)
@@ -44,18 +73,36 @@ class PostViewset(viewsets.ModelViewSet):
         Post.objects.create(author=user, caption=caption, location=location)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @action(detail=True, methods=['GET'])
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        PostLog.objects.create(user=self.request.user,
+                               post=instance, action='visiting post')
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['GET', 'POST'])
     def comments(self, request, pk=None):
         post = self.get_object()
         serializer = CommentSerializer(post.Comment_from_Post, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['GET'])
+    @action(detail=True, methods=['GET', 'POST'])
     def likes(self, request, pk=None):
         post = self.get_object()
         serializer = CustomUserSerializer(post.likes, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=['GET', 'POST'])
+    def mentions(self, request, pk=None):
+        story = self.get_object()
+        serializer = CustomUserSerializer(story.likes, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['GET', 'POST'])
+    def hashtags(self, request, pk=None):
+        post = self.get_object()
+        serializer = HashtagSerializer(post.hashtags, many=True)
+        return Response(serializer.data)
     # def get_serializer(self):
     #     if self.action in ("create", "update", "partial_update", "destroy"):
     #         return PostWriteSerializer
@@ -66,6 +113,50 @@ class PostViewset(viewsets.ModelViewSet):
     #     post = self.get_object()  # Post.objects.filter(id=pk).first()
     #     serializer = CustomUserSerializer(post.likes, many=True)
     #     return Response(serializer.data)
+
+
+class StoryViewset(viewsets.ModelViewSet):
+    """
+    List and Retrieve article categories
+    """
+
+    queryset = Story.objects.all()
+    serializer_class = StorySerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        serializer = PostWriteSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = self.request.user
+        caption = serializer.validated_data.get("caption")
+        location = serializer.validated_data.get("location")
+        Post.objects.create(author=user, caption=caption, location=location)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        PostLog.objects.create(user=self.request.user,
+                               Story=instance, action='visiting story')
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['GET', 'POST'])
+    def comments(self, request, pk=None):
+        story = self.get_object()
+        serializer = CommentSerializer(story.Comment_from_Story, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['GET', 'POST'])
+    def likes(self, request, pk=None):
+        story = self.get_object()
+        serializer = CustomUserSerializer(story.likes, many=True)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=['GET', 'POST'])
+    def hashtags(self, request, pk=None):
+        story = self.get_object()
+        serializer = HashtagSerializer(story.hashtags, many=True)
+        return Response(serializer.data)
 
 
 class CommentView(viewsets.ModelViewSet):
