@@ -40,6 +40,121 @@ class PostAdmin(admin.ModelAdmin):
     inlines = (
         #HashtagInline,
     )
+
+class HashtagAdmin(admin.ModelAdmin):
+    """
+    Hashtag admin page
+    """
+    list_display = [
+        "name",
+
+    ]
+    #search_fields = ["author", "caption"]
+    # ordering = ["name"]
+    # list_filter = ["is_active"]
+    # list_editable = ["is_active"]
+    list_per_page = 30
+
+   
+
+    # actions = ["make_active", "make_not_active"]
+
+    # @admin.action(description="Mark selected comments as active")
+    # def make_active(self, request, queryset):
+    #     queryset.update(is_active=True)
+
+    # @admin.action(description="Mark selected comments as not active")
+    # def make_not_active(self, request, queryset):
+    #     queryset.update(is_active=False)
+    
+class CommentAdmin(admin.ModelAdmin):
+    """
+    Hashtag admin page
+    """
+    list_display = [
+        "post",
+        "author",
+        "content",
+        "posted_time",
+
+    ]
+    #search_fields = ["author", "caption"]
+    # ordering = ["name"]
+    # list_filter = ["is_active"]
+    # list_editable = ["is_active"]
+    list_per_page = 30
+
+   
+
+    # actions = ["make_active", "make_not_active"]
+
+    # @admin.action(description="Mark selected comments as active")
+    # def make_active(self, request, queryset):
+    #     queryset.update(is_active=True)
+
+    # @admin.action(description="Mark selected comments as not active")
+    # def make_not_active(self, request, queryset):
+    #     queryset.update(is_active=False)
+    
+class StoryCommentAdmin(admin.ModelAdmin):
+    """
+    Hashtag admin page
+    """
+    list_display = [
+        "story",
+        "author",
+        "content",
+        "posted_time",
+
+    ]
+    #search_fields = ["author", "caption"]
+    # ordering = ["name"]
+    # list_filter = ["is_active"]
+    # list_editable = ["is_active"]
+    list_per_page = 30
+
+   
+
+    # actions = ["make_active", "make_not_active"]
+
+    # @admin.action(description="Mark selected comments as active")
+    # def make_active(self, request, queryset):
+    #     queryset.update(is_active=True)
+
+    # @admin.action(description="Mark selected comments as not active")
+    # def make_not_active(self, request, queryset):
+    #     queryset.update(is_active=False)
+    
+
+
+class StoryAdmin(admin.ModelAdmin):
+    """
+    Category admin page
+    """
+    list_display = [
+        "author",
+        "posted_time",
+        "caption",
+
+    ]
+    search_fields = ["author", "caption"]
+    # ordering = ["name"]
+    # list_filter = ["is_active"]
+    # list_editable = ["is_active"]
+    list_per_page = 30
+
+    # actions = ["make_active", "make_not_active"]
+
+    # @admin.action(description="Mark selected comments as active")
+    # def make_active(self, request, queryset):
+    #     queryset.update(is_active=True)
+
+    # @admin.action(description="Mark selected comments as not active")
+    # def make_not_active(self, request, queryset):
+    #     queryset.update(is_active=False)
+    inlines = (
+        # HashtagInline,
+    )
 # Product admin page
 
 
@@ -124,6 +239,8 @@ class MediaAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Post, PostAdmin)
-# admin.site.register(Article, ArticleAdmin)
-# admin.site.register(Comment, CommentAdmin)
+admin.site.register(Story, StoryAdmin)
 admin.site.register(Media, MediaAdmin)
+admin.site.register(Hashtag, HashtagAdmin)
+admin.site.register(Comment, CommentAdmin)
+admin.site.register(StoryComment, StoryCommentAdmin)

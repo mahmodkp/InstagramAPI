@@ -16,6 +16,7 @@ from .views import (
    MediaView,
    MediaViewset,
    PostViewset,
+   StoryViewset,
 )
 
 app_name = "Post"
@@ -25,6 +26,7 @@ router.register(r"comments", CommentView)
 router.register(r"media", MediaView)
 router.register(r"hashtag", HashtagViewset)
 router.register(r"media", MediaViewset)
+router.register(r"story", StoryViewset)
 
 
 urlpatterns = [
@@ -34,17 +36,17 @@ urlpatterns = [
 #          GetPostAPI.as_view(),
 #          name='create_post_api'),
 
-#     path('post/update/<int:pk>/',
-#          UpdatePostAPI.as_view(),
-#          name='create_post_api'),
+    path('post/update/<int:pk>/',
+         UpdatePostAPI.as_view(),
+         name='create_post_api'),
 
-#     path('post/delete/<int:pk>/',
-#          DeletePostAPI.as_view(),
-#          name='create_post_api'),
+    path('post/delete/<int:pk>/',
+         DeletePostAPI.as_view(),
+         name='create_post_api'),
     
-#     path('post/like/<int:user_pk>/<int:post_pk>/',
-#          LikePostAPI.as_view(),
-#          name='create_post_api'),
+    path('post/like/<int:user_pk>/<int:post_pk>/',
+         LikePostAPI.as_view(),
+         name='create_post_api'),
 
     
 

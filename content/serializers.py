@@ -73,6 +73,24 @@ class PostSerializer(serializers.ModelSerializer):
                   'comments', 'hashtags', 'mentions', 'likes', 'media']
 
 
+class StorySerializer(serializers.ModelSerializer):
+    """
+    Serializer class for article categories
+    """
+    comments = CommentSerializer(many=True)
+    hashtags = HashtagSerializer(many=True)
+    mentions = CustomUserSerializer(many=True)
+    likes = CustomUserSerializer(many=True)
+    media = MediaSerializer(many=True)
+    # a=CustomUser.objects.get(pk=1)
+    # a.set_password('123')
+
+    class Meta:
+        model = Post
+        fields = ['id', 'caption', 'posted_time', 'location',
+                  'comments', 'hashtags', 'mentions', 'likes', 'media']
+
+
 class PostWriteSerializer(serializers.ModelSerializer):
     """
     Serializer class for Post categories

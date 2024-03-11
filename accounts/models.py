@@ -19,7 +19,7 @@ from django.conf import settings
 
 #     def __str__(self):
 #         return f'{self.first_name} {self.last_name}'
-
+#from content.models import Post
 
 class CustomUser(AbstractUser):
     ''' User Model '''
@@ -85,8 +85,8 @@ class CustomUser(AbstractUser):
 
     def posts(self):
         ''' Get all the posts '''
-        return Post.objects.filter(author__id=self.pk)
+        return 'content.models.Post'.objects.filter(author__id=self.pk)
 
     def tagged_posts(self):
         ''' Get all tagged in posts '''
-        return Post.objects.filter(tags__id=self.pk)
+        return 'content.models.Post'.objects.filter(tags__id=self.pk)

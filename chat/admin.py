@@ -14,17 +14,7 @@ class DirectMessageAdmin(admin.ModelAdmin):
         'text_content',
         'created_at',
     )
-    # list_display_links = (
-    #     'id',
-    #     'sender',
-    #     'receiver',
-    # )
-    # list_filter = (
-    #     'sender',
-    #     'receiver',
-    #     'content_type',
-    #     'created_at',
-    # )
+    
     search_fields = (
         'text_content',
     )

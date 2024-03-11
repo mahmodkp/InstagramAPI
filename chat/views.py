@@ -1,17 +1,17 @@
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from .serializers import DirectMessageSerializer
+from .serializers import MessageSerializer
 from .models import DirectMessage
 from rest_framework.response import Response
 from rest_framework import status
 
-class CreateMessage(CreateAPIView):
-    serializer_class = DirectMessageSerializer
+class MessageView(CreateAPIView):
+    serializer_class = MessageSerializer
     permission_classes = (IsAuthenticated,)
     queryset = DirectMessage.objects.all()
 
     def post(self, request, *args, **kwargs):
-        serializer = DirectMessageSerializer(data=request.data)
+        serializer = MessageSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = self.request.user
         sender = serializer.validated_data.get("sender")
@@ -23,7 +23,7 @@ class CreateMessage(CreateAPIView):
         
 
 
-class RetrieveMessage(RetrieveAPIView):
-    serializer_class = DirectMessageSerializer
+class RetrieveMessageView(RetrieveAPIView):
+    serializer_class = MessageSerializer
     permission_classes = (IsAuthenticated,)
     queryset = DirectMessage.objects.all()
