@@ -41,7 +41,8 @@ class Post(models.Model):
     posted_time = models.DateTimeField('Post_posted_time', auto_now_add=True)
     caption = models.CharField(
         'Caption', max_length=200, blank=True, null=True)
-    location = models.CharField('Location', max_length=50, blank=True)
+    location = models.CharField(
+        'Location', max_length=50, blank=True, null=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    related_name="Post_Likes",
                                    blank=True,
@@ -82,7 +83,7 @@ class Story(models.Model):
     posted_time = models.DateTimeField('Story_posted_time', auto_now_add=True)
     caption = models.CharField(
         'Caption', max_length=200, blank=True, null=True)
-    location = models.CharField('Location', max_length=50, blank=True)
+    location = models.CharField('Location', max_length=50, blank=True, null=True)
     likes = models.ManyToManyField(settings.AUTH_USER_MODEL,
                                    related_name="Story_Likes",
                                    blank=True,
@@ -101,7 +102,7 @@ class Story(models.Model):
                                       symmetrical=False)
 
     def __str__(self):
-        return "{}'s post({})".format(self.author, self.pk)
+        return "{}'s story({})".format(self.author, self.pk)
 
     def comments(self):
         ''' Get all comments '''

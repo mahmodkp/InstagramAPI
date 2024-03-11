@@ -38,12 +38,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'djoser',
-    'drf_file_upload',
+    #'drf_file_upload',
     # 'ckeditor',  # CKEditor config
     # 'ckeditor_uploader',  # CKEditor media uploader
     # Apps
     'accounts',
     'content',
+    'userlog',
+    'chat',
     # 'blog',
     # 'orders',
     # 'payments',

@@ -8,31 +8,34 @@ User = get_user_model()
 User = get_user_model()
 
 
-class PostView(models.Model):
+class PostLog(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='postview')
+        User, on_delete=models.CASCADE, related_name='userlogs')
     post = models.ForeignKey(
         Post, on_delete=models.CASCADE, related_name="postlog")
+    action = models.CharField('Content', max_length=50, blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+   
 
     def __str__(self):
-        return f"{self.user.username} seen post {self.post.id} from {self.post.user.username}"
+        return f"{self.user.username} {self.user.action} {self.post.id} from {self.post.user.username}"
 
     class Meta:
         ordering = ("-created_at",)
 
 
-class StoryView(models.Model):
+class StoryLog(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='storyview')
+        Story, on_delete=models.CASCADE, related_name='userlogs')
     story = models.ForeignKey(
-        Story, on_delete=models.CASCADE, related_name="storylog")
+        Story, on_delete=models.CASCADE, related_name="postlog")
+    action = models.CharField('Content', max_length=50, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
-        return f"{self.user.username} seen story {self.story.id} from {self.story.user.username}"
+        return f"{self.user.username} {self.user.action} {self.Story.id} from {self.story.user.username}"
 
     class Meta:
         ordering = ("-created_at",)
-
 
