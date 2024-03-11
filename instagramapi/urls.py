@@ -39,10 +39,10 @@ urlpatterns = [
     # re_path(r'^auth/', include('djoser.urls.authtoken')),
     re_path(r'^auth/', include('djoser.urls.jwt')),
     re_path(r'^auth/', include('djoser.social.urls')),
-    path('upload/', include('drf_file_upload.urls')),
     # App Routes
     path("api/v1/contents/", include('content.urls')),
     path("api/v1/accounts/", include('accounts.urls')),
+    path("api/v1/direct/", include('chat.urls')),
     # path("api/v1/blog/", include('blog.urls')),
     # path("api/v1/orders/", include('orders.urls')),
     # path("api/v1/payments/", include('payments.urls')),
